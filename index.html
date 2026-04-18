@@ -858,7 +858,7 @@
 // ===================================================
 // CONFIG
 // ===================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbxi9w3mWoNFH1Fs81ygOTQeGD67Z6085VirXOy0K9Dkublwx-AtIHimCp__GXoPFD-G/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzAVfoWOGEAgduMVytkM39leVD_H_SBTGZIL1YsE7mjqsWpjCdg4UhV3OtMWItiWHZ0/exec';
 
 // State
 let currentUser = localStorage.getItem('firebirds_user') || '';
@@ -928,7 +928,7 @@ function renderUserBadge(name) {
 // ===================================================
 async function loadData() {
   try {
-    const res = await fetch(`${API_URL}?action=getSchedule`);
+    const res = await fetch(`${API_URL}?action=getSchedule&t=${Date.now()}`, { cache: 'no-store' });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     schedule = data;
@@ -940,8 +940,8 @@ async function loadData() {
 }
 
 async function apiPost(payload) {
-  const params = new URLSearchParams({ data: JSON.stringify(payload) });
-  const res = await fetch(`${API_URL}?${params.toString()}`);
+  const params = new URLSearchParams({ data: JSON.stringify(payload), t: Date.now() });
+  const res = await fetch(`${API_URL}?${params.toString()}`, { cache: 'no-store' });
   return res.json();
 }
 
