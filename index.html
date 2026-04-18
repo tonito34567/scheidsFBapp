@@ -856,9 +856,9 @@
 
 <script>
 // ===================================================
-// CONFIG – Vul hier de Google Apps Script Web App URL in
+// CONFIG
 // ===================================================
-let API_URL = localStorage.getItem('firebirds_api_url') || '';
+const API_URL = 'https://script.google.com/macros/s/AKfycbyWRt3szaJxSCiMZihcduk_3-Ke4yKUm-2OrjzJqpCvPJtB0K_DpP44vm-l3CfzZ5MV/exec';
 
 // State
 let currentUser = localStorage.getItem('firebirds_user') || '';
@@ -870,11 +870,6 @@ let currentTab = 'rooster';
 // INIT
 // ===================================================
 window.addEventListener('load', async () => {
-  if (!API_URL) {
-    document.getElementById('setupNotice').style.display = 'block';
-    renderEmptyState();
-    return;
-  }
   if (currentUser) {
     renderUserBadge(currentUser);
     document.getElementById('nameSelect').value = currentUser;
@@ -888,7 +883,6 @@ function saveApiUrl() {
     showToast('Ongeldige URL – kopieer de Web App URL uit Apps Script', true);
     return;
   }
-  API_URL = url;
   localStorage.setItem('firebirds_api_url', url);
   document.getElementById('setupNotice').style.display = 'none';
   loadData();
