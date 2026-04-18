@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Firebirds – Scheidsrechter Ruilen</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --oranje: #F47B20;
+      --oranje-dark: #C85F0A;
+      --oranje-light: #FF9A4D;
+      --blauw: #1A2E5A;
+      --blauw-dark: #0D1B3A;
+      --blauw-mid: #243B72;
+      --blauw-light: #2E4D96;
+      --wit: #FFFFFF;
+      --grijs: #F4F4F6;
+      --tekst: #1A1A2E;
+      --subtekst: #6B7280;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--blauw-dark);
+      color: var(--wit);
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    header {
+      background: linear-gradient(135deg, var(--blauw-dark) 0%, var(--blauw) 50%, var(--blauw-mid) 100%);
+      border-bottom: 3px solid var(--oranje);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--oranje);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 0 20px rgba(244,123,32,0.5);
+    }
+
+    .logo-text h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: var(--wit);
+      line-height: 1;
+    }
+
+    .logo-text span {
+      font-size: 12px;
+      color: var(--oranje);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    /* LOGIN */
+    .login-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .login-select {
+      background: var(--blauw-mid);
+      border: 2px solid rgba(244,123,32,0.3);
+      color: var(--wit);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .login-select:focus {
+      outline: none;
+      border-color: var(--oranje);
+    }
+
+    .login-select option { background: var(--blauw-dark); }
+
+    .btn-login {
+      background: var(--oranje);
+      color: var(--wit);
+      border: none;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn-login:hover { background: var(--oranje-dark); transform: translateY(-1px); }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background: var(--oranje);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    .user-name { font-weight: 700; font-size: 15px; }
+
+    .btn-logout {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: var(--subtekst);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* MAIN */
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 28px;
+      background: var(--blauw);
+      padding: 6px;
+      border-radius: 12px;
+      width: fit-content;
+    }
+
+    .tab {
+      padding: 10px 22px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: rgba(255,255,255,0.5);
+      border: none;
+      background: transparent;
+      letter-spacing: 0.5px;
+    }
+
+    .tab.active {
+      background: var(--oranje);
+      color: var(--wit);
+      box-shadow: 0 2px 12px rgba(244,123,32,0.4);
+    }
+
+    .tab:not(.active):hover { color: rgba(255,255,255,0.8); }
+
+    /* PANEL */
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* WEDSTRIJDEN TABEL */
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      color: var(--oranje);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, rgba(244,123,32,0.4), transparent);
+    }
+
+    .table-wrap {
+      background: var(--blauw);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+      margin-bottom: 32px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      background: var(--blauw-dark);
+      color: var(--oranje);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 1.5px;
+      font-size: 13px;
+      padding: 14px 16px;
+      text-align: left;
+    }
+
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 14px;
+      color: rgba(255,255,255,0.85);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    tr:hover td { background: rgba(244,123,32,0.05); }
+
+    .my-row td { background: rgba(244,123,32,0.08); }
+    .my-row td:first-child { border-left: 3px solid var(--oranje); }
+
+    .scheids-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .scheids-badge.me {
+      background: rgba(244,123,32,0.2);
+      color: var(--oranje-light);
+      border: 1px solid rgba(244,123,32,0.4);
+    }
+
+    .scheids-badge.other {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.7);
+    }
+
+    .btn-ruil {
+      background: var(--oranje);
+      color: var(--wit);
+      border: none;
+      padding: 7px 16px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-ruil:hover { background: var(--oranje-dark); transform: translateY(-1px); }
+    .btn-ruil:disabled { background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.3); cursor: not-allowed; transform: none; }
+
+    .team-label {
+      font-size: 11px;
+      color: var(--subtekst);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .match-name { font-weight: 600; }
+
+    /* STATUS BADGES */
+    .status {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-open { background: rgba(245,158,11,0.2); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
+    .status-geaccepteerd { background: rgba(16,185,129,0.15); color: #34D399; border: 1px solid rgba(16,185,129,0.3); }
+    .status-afgewezen { background: rgba(239,68,68,0.15); color: #FC8181; border: 1px solid rgba(239,68,68,0.3); }
+    .status-geannuleerd, .status-vervallen { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.1); }
+
+    /* MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--blauw);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 520px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      border: 1px solid rgba(244,123,32,0.2);
+      animation: modalIn 0.2s ease;
+    }
+
+    @keyframes modalIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 2px;
+      color: var(--oranje);
+      margin-bottom: 24px;
+    }
+
+    .modal-field { margin-bottom: 20px; }
+    .modal-label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--subtekst);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .modal-info {
+      background: var(--blauw-dark);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .modal-select {
+      width: 100%;
+      background: var(--blauw-dark);
+      border: 2px solid rgba(255,255,255,0.1);
+      color: var(--wit);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+
+    .modal-select:focus { outline: none; border-color: var(--oranje); }
+    .modal-select option { background: var(--blauw-dark); }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background: var(--oranje);
+      color: var(--wit);
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover { background: var(--oranje-dark); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.07);
+      color: rgba(255,255,255,0.6);
+      border: none;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover { background: rgba(255,255,255,0.12); }
+
+    .btn-danger {
+      background: rgba(239,68,68,0.15);
+      color: #FC8181;
+      border: 1px solid rgba(239,68,68,0.3);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-danger:hover { background: rgba(239,68,68,0.25); }
+
+    .btn-accept {
+      background: rgba(16,185,129,0.15);
+      color: #34D399;
+      border: 1px solid rgba(16,185,129,0.3);
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-accept:hover { background: rgba(16,185,129,0.25); }
+
+    /* VERZOEKEN CARDS */
+    .verzoek-card {
+      background: var(--blauw);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: border-color 0.2s;
+    }
+
+    .verzoek-card:hover { border-color: rgba(244,123,32,0.2); }
+
+    .verzoek-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .verzoek-id {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      color: var(--subtekst);
+    }
+
+    .verzoek-body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .swap-side {
+      background: var(--blauw-dark);
+      border-radius: 8px;
+      padding: 12px;
+    }
+
+    .swap-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--subtekst);
+      margin-bottom: 4px;
+    }
+
+    .swap-name { font-weight: 700; font-size: 15px; }
+    .swap-match { font-size: 12px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+
+    .swap-arrow {
+      font-size: 24px;
+      color: var(--oranje);
+      text-align: center;
+    }
+
+    .verzoek-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      background: var(--blauw);
+      border-radius: 10px;
+      padding: 14px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 300;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      max-width: 320px;
+      border-left: 4px solid var(--success);
+    }
+
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-left-color: var(--danger); }
+
+    /* EMPTY STATE */
+    .empty {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--subtekst);
+    }
+
+    .empty-icon { font-size: 48px; margin-bottom: 12px; }
+    .empty-text { font-size: 15px; }
+
+    /* LOGIN REQUIRED */
+    .login-required {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--subtekst);
+    }
+
+    .login-required-icon { font-size: 56px; margin-bottom: 16px; }
+    .login-required h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 24px;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 8px;
+    }
+
+    /* LOADING */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 60px;
+      gap: 12px;
+      color: var(--subtekst);
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(244,123,32,0.2);
+      border-top-color: var(--oranje);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* SETUP NOTICE */
+    .setup-notice {
+      background: rgba(244,123,32,0.1);
+      border: 1px solid rgba(244,123,32,0.3);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+
+    .setup-notice h3 {
+      color: var(--oranje);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 18px;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+
+    .setup-notice ol {
+      padding-left: 20px;
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .setup-notice code {
+      background: var(--blauw-dark);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--oranje-light);
+    }
+
+    .config-field {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .config-input {
+      flex: 1;
+      background: var(--blauw-dark);
+      border: 2px solid rgba(244,123,32,0.3);
+      color: var(--wit);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+    }
+
+    .config-input:focus { outline: none; border-color: var(--oranje); }
+    .config-input::placeholder { color: rgba(255,255,255,0.3); }
+
+    /* ADMIN */
+    .admin-login {
+      max-width: 400px;
+      margin: 40px auto;
+      background: var(--blauw);
+      border-radius: 16px;
+      padding: 36px;
+      border: 1px solid rgba(244,123,32,0.2);
+      text-align: center;
+    }
+
+    .admin-login h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      letter-spacing: 2px;
+      color: var(--oranje);
+      margin-bottom: 8px;
+    }
+
+    .admin-login p { color: var(--subtekst); font-size: 13px; margin-bottom: 24px; }
+
+    .admin-pw-input {
+      width: 100%;
+      background: var(--blauw-dark);
+      border: 2px solid rgba(255,255,255,0.1);
+      color: var(--wit);
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      text-align: center;
+      letter-spacing: 4px;
+      margin-bottom: 16px;
+    }
+
+    .admin-pw-input:focus { outline: none; border-color: var(--oranje); }
+
+    .admin-table-wrap {
+      background: var(--blauw);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3);
+    }
+
+    .admin-table input[type="text"],
+    .admin-table input[type="date"],
+    .admin-table input[type="time"] {
+      background: var(--blauw-dark);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--wit);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 13px;
+      width: 100%;
+      transition: border-color 0.2s;
+    }
+
+    .admin-table input:focus { outline: none; border-color: var(--oranje); }
+
+    .admin-save-bar {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 20px;
+      padding: 16px 20px;
+      background: var(--blauw);
+      border-radius: 0 0 12px 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .row-changed td { background: rgba(244,123,32,0.06) !important; }
+    .row-changed td:first-child { border-left: 3px solid var(--oranje); }
+
+    @media (max-width: 640px) {
+      .header-inner { flex-direction: column; gap: 12px; }
+      .verzoek-body { grid-template-columns: 1fr; }
+      .swap-arrow { display: none; }
+      th:nth-child(3), td:nth-child(3) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">🔥</div>
+      <div class="logo-text">
+        <h1>Firebirds</h1>
+        <span>Scheidsrechter Ruilen</span>
+      </div>
+    </div>
+    <div id="loginBar">
+      <div class="login-bar">
+        <select class="login-select" id="nameSelect">
+          <option value="">Wie ben jij?</option>
+          <option>Charlon</option>
+          <option>Efrain</option>
+          <option>Ferdy</option>
+          <option>Jeroen</option>
+          <option>Kamiel</option>
+          <option>Michel</option>
+          <option>Robbert</option>
+          <option>Robin</option>
+          <option>Roman</option>
+          <option>Tjeerd</option>
+          <option>Tonito</option>
+        </select>
+        <button class="btn-login" onclick="login()">Inloggen</button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- Setup Notice -->
+  <div class="setup-notice" id="setupNotice" style="display:none">
+    <h3>⚙️ Configuratie vereist</h3>
+    <ol>
+      <li>Ga naar <strong>script.google.com</strong> → Nieuw project</li>
+      <li>Plak de inhoud van <code>Code.gs</code> (zie bijgeleverd bestand)</li>
+      <li>Maak een Google Sheet aan, kopieer de Sheet ID uit de URL</li>
+      <li>Vul de <code>SHEET_ID</code> in bovenaan het script</li>
+      <li>Voer functie <code>initSheets()</code> eenmalig uit</li>
+      <li>Deploy → Web App → Execute as Me → Anyone with link</li>
+      <li>Kopieer de Web App URL en plak hieronder</li>
+    </ol>
+    <div class="config-field">
+      <input type="text" class="config-input" id="apiUrlInput" placeholder="https://script.google.com/macros/s/JOUW-ID/exec">
+      <button class="btn-login" onclick="saveApiUrl()">Opslaan</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('rooster')">📅 Rooster</button>
+    <button class="tab" onclick="switchTab('verzoeken')">🔄 Ruilverzoeken <span id="openCount" style="display:none"></span></button>
+    <button class="tab" onclick="switchTab('mijn')">👤 Mijn wedstrijden</button>
+    <button class="tab" onclick="switchTab('admin')">⚙️ Admin</button>
+  </div>
+
+  <!-- Rooster Panel -->
+  <div class="panel active" id="panel-rooster">
+    <div class="section-title">Scheidsrechtersrooster 2026</div>
+    <div id="roosterContent">
+      <div class="loading"><div class="spinner"></div> Rooster laden...</div>
+    </div>
+  </div>
+
+  <!-- Verzoeken Panel -->
+  <div class="panel" id="panel-verzoeken">
+    <div class="section-title">Alle Ruilverzoeken</div>
+    <div id="verzoekenContent">
+      <div class="loading"><div class="spinner"></div> Verzoeken laden...</div>
+    </div>
+  </div>
+
+  <!-- Mijn wedstrijden Panel -->
+  <div class="panel" id="panel-mijn">
+    <div id="mijnContent">
+      <div class="login-required">
+        <div class="login-required-icon">🔐</div>
+        <h2>Log in om je wedstrijden te zien</h2>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div class="panel" id="panel-admin">
+    <div id="adminContent">
+      <div class="admin-login">
+        <div style="font-size:40px;margin-bottom:12px">🔒</div>
+        <h2>Admin toegang</h2>
+        <p>Alleen voor de scheidsrechterscoördinator</p>
+        <input type="password" class="admin-pw-input" id="adminPwInput" placeholder="••••••" onkeydown="if(event.key==='Enter')adminLogin()">
+        <button class="btn-primary" onclick="adminLogin()">Inloggen</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Modal: Ruilverzoek aanmaken -->
+<div class="modal-overlay" id="ruilModal">
+  <div class="modal">
+    <h2>🔄 Ruilverzoek aanmaken</h2>
+    <div class="modal-field">
+      <label class="modal-label">Jouw wedstrijd</label>
+      <div class="modal-info" id="modalMijnWedstrijd">–</div>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Ruil met</label>
+      <select class="modal-select" id="modalOntvanger" onchange="filterNaarWedstrijden()">
+        <option value="">Selecteer scheidsrechter...</option>
+      </select>
+    </div>
+    <div class="modal-field">
+      <label class="modal-label">Zijn/haar wedstrijd</label>
+      <select class="modal-select" id="modalNaarWedstrijd">
+        <option value="">Selecteer wedstrijd...</option>
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Annuleer</button>
+      <button class="btn-primary" onclick="verstuurVerzoek()">Verzoek versturen 🔥</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===================================================
+// CONFIG – Vul hier de Google Apps Script Web App URL in
+// ===================================================
+let API_URL = localStorage.getItem('firebirds_api_url') || '';
+
+// State
+let currentUser = localStorage.getItem('firebirds_user') || '';
+let schedule = { wedstrijden: [], verzoeken: [] };
+let selectedVanWedstrijd = null;
+let currentTab = 'rooster';
+
+// ===================================================
+// INIT
+// ===================================================
+window.addEventListener('load', async () => {
+  if (!API_URL) {
+    document.getElementById('setupNotice').style.display = 'block';
+    renderEmptyState();
+    return;
+  }
+  if (currentUser) {
+    renderUserBadge(currentUser);
+    document.getElementById('nameSelect').value = currentUser;
+  }
+  await loadData();
+});
+
+function saveApiUrl() {
+  const url = document.getElementById('apiUrlInput').value.trim();
+  if (!url.startsWith('https://script.google.com')) {
+    showToast('Ongeldige URL – kopieer de Web App URL uit Apps Script', true);
+    return;
+  }
+  API_URL = url;
+  localStorage.setItem('firebirds_api_url', url);
+  document.getElementById('setupNotice').style.display = 'none';
+  loadData();
+}
+
+// ===================================================
+// AUTH
+// ===================================================
+function login() {
+  const name = document.getElementById('nameSelect').value;
+  if (!name) { showToast('Selecteer eerst je naam', true); return; }
+  currentUser = name;
+  localStorage.setItem('firebirds_user', name);
+  renderUserBadge(name);
+  renderAll();
+}
+
+function logout() {
+  currentUser = '';
+  localStorage.removeItem('firebirds_user');
+  document.getElementById('loginBar').innerHTML = `
+    <div class="login-bar">
+      <select class="login-select" id="nameSelect">
+        <option value="">Wie ben jij?</option>
+        ${['Charlon','Efrain','Ferdy','Jeroen','Kamiel','Michel','Robbert','Robin','Roman','Tjeerd','Tonito'].map(n=>`<option>${n}</option>`).join('')}
+      </select>
+      <button class="btn-login" onclick="login()">Inloggen</button>
+    </div>`;
+  renderAll();
+}
+
+function renderUserBadge(name) {
+  document.getElementById('loginBar').innerHTML = `
+    <div class="user-badge">
+      <div class="user-avatar">${name[0]}</div>
+      <span class="user-name">${name}</span>
+      <button class="btn-logout" onclick="logout()">Uitloggen</button>
+    </div>`;
+}
+
+// ===================================================
+// API
+// ===================================================
+async function loadData() {
+  try {
+    const res = await fetch(`${API_URL}?action=getSchedule`);
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+    schedule = data;
+    renderAll();
+  } catch (e) {
+    showToast('Fout bij laden: ' + e.message, true);
+    renderEmptyState();
+  }
+}
+
+async function apiPost(payload) {
+  const res = await fetch(API_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return res.json();
+}
+
+// ===================================================
+// RENDER
+// ===================================================
+function renderEmptyState() {
+  document.getElementById('roosterContent').innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Configureer eerst de backend (zie instructies boven)</div></div>';
+  document.getElementById('verzoekenContent').innerHTML = '';
+  document.getElementById('mijnContent').innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Geen data beschikbaar</div></div>';
+}
+
+function renderAll() {
+  renderRooster();
+  renderVerzoeken();
+  renderMijn();
+  updateOpenCount();
+}
+
+function renderRooster() {
+  const { wedstrijden, verzoeken } = schedule;
+  if (!wedstrijden.length) {
+    document.getElementById('roosterContent').innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Geen wedstrijden gevonden</div></div>';
+    return;
+  }
+
+  const openVerzoeken = verzoeken.filter(v => v.status === 'open');
+
+  let html = `<div class="table-wrap"><table>
+    <thead><tr>
+      <th>Datum</th><th>Tijd</th>
+      <th>Wedstrijd</th>
+      <th>Scheidsrechter</th>
+      <th></th>
+    </tr></thead><tbody>`;
+
+  wedstrijden.forEach(w => {
+    const isMe = w.scheids === currentUser;
+    const heeftOpenVerzoek = openVerzoeken.some(v =>
+      (v.wedstrijdVan == w.id || v.wedstrijdNaar == w.id) && v.status === 'open'
+    );
+
+    html += `<tr class="${isMe ? 'my-row' : ''}">
+      <td><strong>${w.datum}</strong></td>
+      <td>${w.tijd}</td>
+      <td>
+        <div class="team-label">Thuisteam</div>
+        <div class="match-name">${w.thuisteam}</div>
+        <div class="team-label" style="margin-top:4px">vs ${w.uitteam}</div>
+      </td>
+      <td>
+        <span class="scheids-badge ${isMe ? 'me' : 'other'}">
+          ${isMe ? '🔥' : '👤'} ${w.scheids}
+        </span>
+      </td>
+      <td>`;
+
+    if (currentUser && isMe) {
+      if (heeftOpenVerzoek) {
+        html += `<button class="btn-ruil" disabled>Verzoek open</button>`;
+      } else {
+        html += `<button class="btn-ruil" onclick="openRuilModal(${w.id})">Ruilen</button>`;
+      }
+    } else if (currentUser && !isMe) {
+      // Laat zien of er een verzoek van mij naar deze wedstrijd loopt
+      const mijnVerzoek = openVerzoeken.find(v => v.aanvrager === currentUser && v.wedstrijdNaar == w.id);
+      if (mijnVerzoek) {
+        html += `<span class="status status-open">Aangevraagd</span>`;
+      }
+    }
+
+    html += `</td></tr>`;
+  });
+
+  html += '</tbody></table></div>';
+  document.getElementById('roosterContent').innerHTML = html;
+}
+
+function renderVerzoeken() {
+  const { verzoeken, wedstrijden } = schedule;
+  if (!verzoeken.length) {
+    document.getElementById('verzoekenContent').innerHTML = '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-text">Nog geen ruilverzoeken</div></div>';
+    return;
+  }
+
+  const getWedstrijd = id => wedstrijden.find(w => w.id == id);
+
+  let html = '';
+  [...verzoeken].reverse().forEach(v => {
+    const van = getWedstrijd(v.wedstrijdVan);
+    const naar = getWedstrijd(v.wedstrijdNaar);
+    const isAanvrager = v.aanvrager === currentUser;
+    const isOntvanger = v.ontvanger === currentUser;
+
+    html += `<div class="verzoek-card">
+      <div class="verzoek-header">
+        <div>
+          <div class="verzoek-id">ID: ${v.id}</div>
+          <span class="status status-${v.status}">${v.status}</span>
+        </div>
+        <div style="font-size:12px;color:var(--subtekst)">${v.timestamp ? new Date(v.timestamp).toLocaleDateString('nl-NL') : ''}</div>
+      </div>
+      <div class="verzoek-body">
+        <div class="swap-side">
+          <div class="swap-label">Van</div>
+          <div class="swap-name">${v.aanvrager}</div>
+          <div class="swap-match">${van ? `${van.datum} ${van.tijd}` : '?'}</div>
+          <div class="swap-match">${van ? `${van.thuisteam.split(' - ')[1] || van.thuisteam} vs ${van.uitteam.split(' - ')[1] || van.uitteam}` : ''}</div>
+        </div>
+        <div class="swap-arrow">⇄</div>
+        <div class="swap-side">
+          <div class="swap-label">Naar</div>
+          <div class="swap-name">${v.ontvanger}</div>
+          <div class="swap-match">${naar ? `${naar.datum} ${naar.tijd}` : '?'}</div>
+          <div class="swap-match">${naar ? `${naar.thuisteam.split(' - ')[1] || naar.thuisteam} vs ${naar.uitteam.split(' - ')[1] || naar.uitteam}` : ''}</div>
+        </div>
+      </div>
+      <div class="verzoek-actions">`;
+
+    if (v.status === 'open') {
+      if (isOntvanger) {
+        html += `<button class="btn-accept" onclick="accepteerVerzoek('${v.id}')">✓ Accepteren</button>
+                 <button class="btn-danger" onclick="weigerVerzoek('${v.id}')">✗ Weigeren</button>`;
+      }
+      if (isAanvrager) {
+        html += `<button class="btn-danger" onclick="annuleerVerzoek('${v.id}')">Annuleren</button>`;
+      }
+    }
+
+    html += `</div></div>`;
+  });
+
+  document.getElementById('verzoekenContent').innerHTML = html || '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-text">Geen verzoeken</div></div>';
+}
+
+function renderMijn() {
+  if (!currentUser) {
+    document.getElementById('mijnContent').innerHTML = `
+      <div class="login-required">
+        <div class="login-required-icon">🔐</div>
+        <h2>Log in om je wedstrijden te zien</h2>
+      </div>`;
+    return;
+  }
+
+  const { wedstrijden, verzoeken } = schedule;
+  const mijnWedstrijden = wedstrijden.filter(w => w.scheids === currentUser);
+  const mijnVerzoeken = verzoeken.filter(v => v.aanvrager === currentUser || v.ontvanger === currentUser);
+
+  let html = `<div class="section-title">Jouw wedstrijden – ${currentUser}</div>`;
+
+  if (!mijnWedstrijden.length) {
+    html += '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Geen wedstrijden toegewezen</div></div>';
+  } else {
+    html += `<div class="table-wrap"><table>
+      <thead><tr><th>Datum</th><th>Tijd</th><th>Wedstrijd</th><th></th></tr></thead><tbody>`;
+    mijnWedstrijden.forEach(w => {
+      html += `<tr class="my-row">
+        <td><strong>${w.datum}</strong></td>
+        <td>${w.tijd}</td>
+        <td><div class="match-name">${w.thuisteam} vs ${w.uitteam}</div></td>
+        <td><button class="btn-ruil" onclick="openRuilModal(${w.id})">Ruilen</button></td>
+      </tr>`;
+    });
+    html += '</tbody></table></div>';
+  }
+
+  html += `<div class="section-title" style="margin-top:16px">Jouw ruilverzoeken</div>`;
+  const { wedstrijden: all } = schedule;
+
+  if (!mijnVerzoeken.length) {
+    html += '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-text">Geen ruilverzoeken</div></div>';
+  } else {
+    mijnVerzoeken.reverse().forEach(v => {
+      const van = all.find(w => w.id == v.wedstrijdVan);
+      const naar = all.find(w => w.id == v.wedstrijdNaar);
+      const isAanvrager = v.aanvrager === currentUser;
+      html += `<div class="verzoek-card">
+        <div class="verzoek-header">
+          <span class="status status-${v.status}">${v.status}</span>
+          <span style="font-size:12px;color:var(--subtekst)">${isAanvrager ? 'Jij vroeg aan' : 'Aangevraagd door ' + v.aanvrager}</span>
+        </div>
+        <div class="verzoek-body">
+          <div class="swap-side">
+            <div class="swap-label">${v.aanvrager}</div>
+            <div class="swap-match">${van ? `${van.datum} – ${van.thuisteam} vs ${van.uitteam}` : '?'}</div>
+          </div>
+          <div class="swap-arrow">⇄</div>
+          <div class="swap-side">
+            <div class="swap-label">${v.ontvanger}</div>
+            <div class="swap-match">${naar ? `${naar.datum} – ${naar.thuisteam} vs ${naar.uitteam}` : '?'}</div>
+          </div>
+        </div>
+        <div class="verzoek-actions">
+          ${v.status === 'open' && !isAanvrager ? `<button class="btn-accept" onclick="accepteerVerzoek('${v.id}')">✓ Accepteren</button><button class="btn-danger" onclick="weigerVerzoek('${v.id}')">✗ Weigeren</button>` : ''}
+          ${v.status === 'open' && isAanvrager ? `<button class="btn-danger" onclick="annuleerVerzoek('${v.id}')">Annuleren</button>` : ''}
+        </div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('mijnContent').innerHTML = html;
+}
+
+function updateOpenCount() {
+  const open = schedule.verzoeken.filter(v =>
+    v.status === 'open' && (v.aanvrager === currentUser || v.ontvanger === currentUser)
+  ).length;
+  const badge = document.getElementById('openCount');
+  if (open > 0) {
+    badge.style.display = 'inline';
+    badge.textContent = `(${open})`;
+    badge.style.color = 'var(--oranje)';
+  } else {
+    badge.style.display = 'none';
+  }
+}
+
+// ===================================================
+// MODAL
+// ===================================================
+function openRuilModal(wedstrijdId) {
+  if (!currentUser) { showToast('Log eerst in', true); return; }
+  selectedVanWedstrijd = wedstrijdId;
+
+  const w = schedule.wedstrijden.find(x => x.id == wedstrijdId);
+  document.getElementById('modalMijnWedstrijd').textContent =
+    `${w.datum} ${w.tijd} – ${w.thuisteam} vs ${w.uitteam}`;
+
+  // Vul ontvangers in (alle scheids behalve ikzelf)
+  const ontvangers = [...new Set(schedule.wedstrijden.map(x => x.scheids))].filter(s => s !== currentUser);
+  const sel = document.getElementById('modalOntvanger');
+  sel.innerHTML = '<option value="">Selecteer scheidsrechter...</option>' +
+    ontvangers.map(n => `<option>${n}</option>`).join('');
+
+  document.getElementById('modalNaarWedstrijd').innerHTML = '<option value="">Selecteer eerst een scheidsrechter...</option>';
+  document.getElementById('ruilModal').classList.add('open');
+}
+
+function filterNaarWedstrijden() {
+  const ontvanger = document.getElementById('modalOntvanger').value;
+  const wedstrijden = schedule.wedstrijden.filter(w => w.scheids === ontvanger);
+  const sel = document.getElementById('modalNaarWedstrijd');
+  sel.innerHTML = '<option value="">Selecteer wedstrijd...</option>' +
+    wedstrijden.map(w => `<option value="${w.id}">${w.datum} ${w.tijd} – ${w.thuisteam} vs ${w.uitteam}</option>`).join('');
+}
+
+function closeModal() {
+  document.getElementById('ruilModal').classList.remove('open');
+}
+
+async function verstuurVerzoek() {
+  const ontvanger = document.getElementById('modalOntvanger').value;
+  const naarWedstrijd = document.getElementById('modalNaarWedstrijd').value;
+  if (!ontvanger || !naarWedstrijd) { showToast('Selecteer een scheidsrechter en wedstrijd', true); return; }
+
+  const result = await apiPost({
+    action: 'requestSwap',
+    aanvrager: currentUser,
+    wedstrijdVan: selectedVanWedstrijd,
+    ontvanger,
+    wedstrijdNaar: parseInt(naarWedstrijd)
+  });
+
+  if (result.error) { showToast(result.error, true); return; }
+
+  closeModal();
+  showToast('Ruilverzoek verstuurd! 🔥');
+  await loadData();
+}
+
+// ===================================================
+// ACTIONS
+// ===================================================
+async function accepteerVerzoek(id) {
+  const result = await apiPost({ action: 'acceptSwap', id });
+  if (result.error) { showToast(result.error, true); return; }
+  showToast('Ruil geaccepteerd! Rooster bijgewerkt ✓');
+  await loadData();
+}
+
+async function weigerVerzoek(id) {
+  const result = await apiPost({ action: 'rejectSwap', id });
+  if (result.error) { showToast(result.error, true); return; }
+  showToast('Verzoek afgewezen');
+  await loadData();
+}
+
+async function annuleerVerzoek(id) {
+  const result = await apiPost({ action: 'cancelSwap', id, naam: currentUser });
+  if (result.error) { showToast(result.error, true); return; }
+  showToast('Verzoek geannuleerd');
+  await loadData();
+}
+
+// ===================================================
+// ADMIN
+// ===================================================
+const ADMIN_PW = 'firebirds2026'; // Wijzig dit wachtwoord
+let adminLoggedIn = sessionStorage.getItem('firebirds_admin') === '1';
+
+function adminLogin() {
+  const pw = document.getElementById('adminPwInput').value;
+  if (pw === ADMIN_PW) {
+    adminLoggedIn = true;
+    sessionStorage.setItem('firebirds_admin', '1');
+    renderAdmin();
+    showToast('Admin ingelogd 🔥');
+  } else {
+    showToast('Verkeerd wachtwoord', true);
+    document.getElementById('adminPwInput').value = '';
+  }
+}
+
+function renderAdmin() {
+  if (!adminLoggedIn) return; // blijf login tonen
+  const { wedstrijden } = schedule;
+
+  let html = `
+    <div class="section-title">Wedstrijdrooster beheren
+      <button class="btn-login" style="margin-left:auto;font-size:12px;padding:6px 14px" onclick="adminLogout()">Uitloggen</button>
+    </div>
+    <div class="admin-table-wrap">
+    <table class="admin-table">
+      <thead><tr>
+        <th>#</th>
+        <th>Datum</th>
+        <th>Tijd</th>
+        <th>Thuisteam</th>
+        <th>Uitteam</th>
+        <th>Scheidsrechter</th>
+      </tr></thead>
+      <tbody>`;
+
+  wedstrijden.forEach(w => {
+    // Datum omzetten naar yyyy-mm-dd voor input[type=date]
+    const [d, m, y] = w.datum.split('-');
+    const isoDate = `${y}-${m}-${d}`;
+    html += `<tr id="adminRow${w.id}">
+      <td style="color:var(--subtekst);font-size:13px">${w.id}</td>
+      <td><input type="date" value="${isoDate}" onchange="markChanged(${w.id})" data-field="datum" data-id="${w.id}"></td>
+      <td><input type="time" value="${w.tijd}" onchange="markChanged(${w.id})" data-field="tijd" data-id="${w.id}"></td>
+      <td><input type="text" value="${w.thuisteam}" onchange="markChanged(${w.id})" data-field="thuisteam" data-id="${w.id}"></td>
+      <td><input type="text" value="${w.uitteam}" onchange="markChanged(${w.id})" data-field="uitteam" data-id="${w.id}"></td>
+      <td><input type="text" value="${w.scheids}" onchange="markChanged(${w.id})" data-field="scheids" data-id="${w.id}" style="max-width:120px"></td>
+    </tr>`;
+  });
+
+  html += `</tbody></table>
+    <div class="admin-save-bar">
+      <span id="adminChangedInfo" style="color:var(--subtekst);font-size:13px;align-self:center"></span>
+      <button class="btn-secondary" onclick="adminReset()">Reset</button>
+      <button class="btn-primary" onclick="adminSave()">💾 Opslaan in Google Sheets</button>
+    </div>
+    </div>`;
+
+  document.getElementById('adminContent').innerHTML = html;
+  changedRows.clear();
+}
+
+let changedRows = new Set();
+
+function markChanged(id) {
+  changedRows.add(id);
+  document.getElementById(`adminRow${id}`).classList.add('row-changed');
+  document.getElementById('adminChangedInfo').textContent =
+    `${changedRows.size} rij${changedRows.size > 1 ? 'en' : ''} gewijzigd`;
+}
+
+function adminReset() {
+  changedRows.clear();
+  renderAdmin();
+  showToast('Wijzigingen teruggedraaid');
+}
+
+async function adminSave() {
+  if (!changedRows.size) { showToast('Geen wijzigingen om op te slaan', true); return; }
+
+  const updates = [];
+  changedRows.forEach(id => {
+    const inputs = document.querySelectorAll(`#adminRow${id} input`);
+    const row = { id };
+    inputs.forEach(inp => {
+      let val = inp.value;
+      if (inp.dataset.field === 'datum') {
+        // Terug naar dd-mm-yyyy
+        const [y, m, d] = val.split('-');
+        val = `${d}-${m}-${y}`;
+      }
+      row[inp.dataset.field] = val;
+    });
+    updates.push(row);
+  });
+
+  const result = await apiPost({ action: 'updateWedstrijden', updates });
+  if (result.error) { showToast(result.error, true); return; }
+
+  showToast(`${updates.length} wedstrijd${updates.length > 1 ? 'en' : ''} opgeslagen ✓`);
+  await loadData();
+  renderAdmin();
+}
+
+function adminLogout() {
+  adminLoggedIn = false;
+  sessionStorage.removeItem('firebirds_admin');
+  document.getElementById('adminContent').innerHTML = `
+    <div class="admin-login">
+      <div style="font-size:40px;margin-bottom:12px">🔒</div>
+      <h2>Admin toegang</h2>
+      <p>Alleen voor de scheidsrechterscoördinator</p>
+      <input type="password" class="admin-pw-input" id="adminPwInput" placeholder="••••••" onkeydown="if(event.key==='Enter')adminLogin()">
+      <button class="btn-primary" onclick="adminLogin()">Inloggen</button>
+    </div>`;
+}
+
+// Render admin panel automatisch als al ingelogd
+function checkAdminAutoRender() {
+  if (adminLoggedIn && currentTab === 'admin') renderAdmin();
+}
+
+// ===================================================
+// TABS & UTILS
+// ===================================================
+function switchTab(name) {
+  currentTab = name;
+  const tabs = ['rooster', 'verzoeken', 'mijn', 'admin'];
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', tabs[i] === name);
+  });
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`panel-${name}`).classList.add('active');
+  if (name === 'admin') checkAdminAutoRender();
+}
+
+function showToast(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => t.className = 'toast', 3500);
+}
+
+// Close modal on overlay click
+document.getElementById('ruilModal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+</script>
+</body>
+</html>
+EOF
+echo "Frontend klaar"
