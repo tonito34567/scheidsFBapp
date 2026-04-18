@@ -865,6 +865,7 @@ let currentUser = localStorage.getItem('firebirds_user') || '';
 let schedule = { wedstrijden: [], verzoeken: [] };
 let selectedVanWedstrijd = null;
 let currentTab = 'rooster';
+let isLoading = false;
 
 // ===================================================
 // INIT
@@ -872,9 +873,10 @@ let currentTab = 'rooster';
 window.addEventListener('load', async () => {
   if (currentUser) {
     renderUserBadge(currentUser);
-    document.getElementById('nameSelect').value = currentUser;
   }
   await loadData();
+  // Auto-refresh elke 30 seconden
+  setInterval(loadData, 30000);
 });
 
 function saveApiUrl() {
@@ -892,7 +894,8 @@ function saveApiUrl() {
 // AUTH
 // ===================================================
 function login() {
-  const name = document.getElementById('nameSelect').value;
+  const sel = document.getElementById('nameSelect');
+  const name = sel ? sel.value : '';
   if (!name) { showToast('Selecteer eerst je naam', true); return; }
   currentUser = name;
   localStorage.setItem('firebirds_user', name);
@@ -927,6 +930,8 @@ function renderUserBadge(name) {
 // API
 // ===================================================
 async function loadData() {
+  if (isLoading) return;
+  isLoading = true;
   try {
     const res = await fetch(`${API_URL}?action=getSchedule&t=${Date.now()}`, { cache: 'no-store' });
     const data = await res.json();
@@ -935,7 +940,10 @@ async function loadData() {
     renderAll();
   } catch (e) {
     showToast('Fout bij laden: ' + e.message, true);
-    renderEmptyState();
+    // Render toch zodat de app niet blijft hangen
+    renderAll();
+  } finally {
+    isLoading = false;
   }
 }
 
