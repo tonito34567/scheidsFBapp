@@ -781,15 +781,12 @@
     <button class="tab active" onclick="switchTab('rooster')">📅 Rooster</button>
     <button class="tab" onclick="switchTab('verzoeken')">🔄 Ruilverzoeken <span id="openCount" style="display:none"></span></button>
     <button class="tab" onclick="switchTab('mijn')">👤 Mijn wedstrijden</button>
-    <button class="tab" onclick="switchTab('historiek')">📋 Historiek</button>
     <button class="tab" onclick="switchTab('admin')">⚙️ Admin</button>
   </div>
 
   <!-- Rooster Panel -->
   <div class="panel active" id="panel-rooster">
-    <div class="section-title">Scheidsrechtersrooster 2026
-      <button class="btn-ruil" style="margin-left:auto;font-size:13px" onclick="openExtraModal()">➕ Extra dienst aanbieden</button>
-    </div>
+    <div class="section-title">Scheidsrechtersrooster 2026</div>
     <div id="roosterContent">
       <div class="loading"><div class="spinner"></div> Rooster laden...</div>
     </div>
@@ -797,7 +794,7 @@
 
   <!-- Verzoeken Panel -->
   <div class="panel" id="panel-verzoeken">
-    <div class="section-title">Openstaande Ruilverzoeken</div>
+    <div class="section-title">Alle Ruilverzoeken</div>
     <div id="verzoekenContent">
       <div class="loading"><div class="spinner"></div> Verzoeken laden...</div>
     </div>
@@ -810,16 +807,6 @@
         <div class="login-required-icon">🔐</div>
         <h2>Log in om je wedstrijden te zien</h2>
       </div>
-    </div>
-  </div>
-
-  <!-- Historiek Panel -->
-  <div class="panel" id="panel-historiek">
-    <div class="section-title">Historiek
-      <button class="btn-danger" style="margin-left:auto;font-size:13px;padding:7px 16px" onclick="verwijderAlles()">🗑 Alles wissen</button>
-    </div>
-    <div id="historiekContent">
-      <div class="loading"><div class="spinner"></div> Laden...</div>
     </div>
   </div>
 
@@ -837,54 +824,29 @@
   </div>
 </main>
 
-<!-- Modal: Verzoek aanmaken -->
+<!-- Modal: Ruilverzoek aanmaken -->
 <div class="modal-overlay" id="ruilModal">
   <div class="modal">
-    <!-- Type selector -->
-    <div style="display:flex;gap:8px;margin-bottom:24px">
-      <button id="typeRuil" class="tab active" style="flex:1;border-radius:8px" onclick="switchModalType('ruil')">🔄 Ruilen</button>
-      <button id="typeExtra" class="tab" style="flex:1;border-radius:8px" onclick="switchModalType('extra')">➕ Extra dienst</button>
+    <h2>🔄 Ruilverzoek aanmaken</h2>
+    <div class="modal-field">
+      <label class="modal-label">Jouw wedstrijd</label>
+      <div class="modal-info" id="modalMijnWedstrijd">–</div>
     </div>
-
-    <!-- RUILEN -->
-    <div id="modalRuil">
-      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--oranje);margin-bottom:20px">🔄 Ruilverzoek</h2>
-      <div class="modal-field">
-        <label class="modal-label">Jouw wedstrijd</label>
-        <div class="modal-info" id="modalMijnWedstrijd">–</div>
-      </div>
-      <div class="modal-field">
-        <label class="modal-label">Ruil met</label>
-        <select class="modal-select" id="modalOntvanger" onchange="filterNaarWedstrijden()">
-          <option value="">Selecteer scheidsrechter...</option>
-        </select>
-      </div>
-      <div class="modal-field">
-        <label class="modal-label">Zijn/haar wedstrijd</label>
-        <select class="modal-select" id="modalNaarWedstrijd">
-          <option value="">Selecteer wedstrijd...</option>
-        </select>
-      </div>
+    <div class="modal-field">
+      <label class="modal-label">Ruil met</label>
+      <select class="modal-select" id="modalOntvanger" onchange="filterNaarWedstrijden()">
+        <option value="">Selecteer scheidsrechter...</option>
+      </select>
     </div>
-
-    <!-- EXTRA DIENST -->
-    <div id="modalExtra" style="display:none">
-      <h2 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--oranje);margin-bottom:20px">➕ Extra dienst aanbieden</h2>
-      <div class="modal-field">
-        <label class="modal-label">Wedstrijd die jij wil overnemen</label>
-        <select class="modal-select" id="modalExtraWedstrijd" onchange="filterExtraOntvanger()">
-          <option value="">Selecteer wedstrijd...</option>
-        </select>
-      </div>
-      <div class="modal-field">
-        <label class="modal-label">Scheidsrechter (wordt automatisch ingevuld)</label>
-        <div class="modal-info" id="modalExtraOntvanger">–</div>
-      </div>
+    <div class="modal-field">
+      <label class="modal-label">Zijn/haar wedstrijd</label>
+      <select class="modal-select" id="modalNaarWedstrijd">
+        <option value="">Selecteer wedstrijd...</option>
+      </select>
     </div>
-
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Annuleer</button>
-      <button class="btn-primary" onclick="verstuurVerzoek()">Versturen 🔥</button>
+      <button class="btn-primary" onclick="verstuurVerzoek()">Verzoek versturen 🔥</button>
     </div>
   </div>
 </div>
@@ -896,14 +858,13 @@
 // ===================================================
 // CONFIG
 // ===================================================
-const API_URL = 'https://script.google.com/macros/s/AKfycbx1bXFaGdCl1t_UDkrt0cEQ_ZMRl4KXqRQN-DHMDLOjTkXuPjZ0lt79DWK-Os3cjNVH/exec';
+const API_URL = 'https://script.google.com/macros/s/AKfycbxi9w3mWoNFH1Fs81ygOTQeGD67Z6085VirXOy0K9Dkublwx-AtIHimCp__GXoPFD-G/exec';
 
 // State
 let currentUser = localStorage.getItem('firebirds_user') || '';
 let schedule = { wedstrijden: [], verzoeken: [] };
 let selectedVanWedstrijd = null;
 let currentTab = 'rooster';
-let isLoading = false;
 
 // ===================================================
 // INIT
@@ -911,10 +872,9 @@ let isLoading = false;
 window.addEventListener('load', async () => {
   if (currentUser) {
     renderUserBadge(currentUser);
+    document.getElementById('nameSelect').value = currentUser;
   }
   await loadData();
-  // Auto-refresh elke 30 seconden
-  setInterval(loadData, 30000);
 });
 
 function saveApiUrl() {
@@ -932,8 +892,7 @@ function saveApiUrl() {
 // AUTH
 // ===================================================
 function login() {
-  const sel = document.getElementById('nameSelect');
-  const name = sel ? sel.value : '';
+  const name = document.getElementById('nameSelect').value;
   if (!name) { showToast('Selecteer eerst je naam', true); return; }
   currentUser = name;
   localStorage.setItem('firebirds_user', name);
@@ -967,27 +926,37 @@ function renderUserBadge(name) {
 // ===================================================
 // API
 // ===================================================
+// Zet dd-mm-yyyy + HH:MM om naar een sorteerbare timestamp
+function wedstrijdTs(w) {
+  const [d, m, y] = (w.datum || '').split('-').map(Number);
+  const [hh, mm] = (w.tijd || '00:00').split(':').map(Number);
+  return new Date(y || 0, (m || 1) - 1, d || 1, hh || 0, mm || 0).getTime();
+}
+
+// Sorteer wedstrijden chronologisch (raakt de Sheet-volgorde/ID's niet aan)
+function sortWedstrijden() {
+  if (Array.isArray(schedule.wedstrijden)) {
+    schedule.wedstrijden.sort((a, b) => wedstrijdTs(a) - wedstrijdTs(b));
+  }
+}
+
 async function loadData() {
-  if (isLoading) return;
-  isLoading = true;
   try {
-    const res = await fetch(`${API_URL}?action=getSchedule&t=${Date.now()}`, { cache: 'no-store' });
+    const res = await fetch(`${API_URL}?action=getSchedule`);
     const data = await res.json();
     if (data.error) throw new Error(data.error);
     schedule = data;
+    sortWedstrijden();
     renderAll();
   } catch (e) {
     showToast('Fout bij laden: ' + e.message, true);
-    // Render toch zodat de app niet blijft hangen
-    renderAll();
-  } finally {
-    isLoading = false;
+    renderEmptyState();
   }
 }
 
 async function apiPost(payload) {
-  const params = new URLSearchParams({ data: JSON.stringify(payload), t: Date.now() });
-  const res = await fetch(`${API_URL}?${params.toString()}`, { cache: 'no-store' });
+  const params = new URLSearchParams({ data: JSON.stringify(payload) });
+  const res = await fetch(`${API_URL}?${params.toString()}`);
   return res.json();
 }
 
@@ -1068,19 +1037,16 @@ function renderRooster() {
 
 function renderVerzoeken() {
   const { verzoeken, wedstrijden } = schedule;
-  const openVerzoeken = verzoeken.filter(v => v.status === 'open');
-
-  if (!openVerzoeken.length) {
-    document.getElementById('verzoekenContent').innerHTML = '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-text">Geen openstaande ruilverzoeken</div></div>';
+  if (!verzoeken.length) {
+    document.getElementById('verzoekenContent').innerHTML = '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-text">Nog geen ruilverzoeken</div></div>';
     return;
   }
 
   const getWedstrijd = id => wedstrijden.find(w => w.id == id);
-  let html = '';
 
-  [...openVerzoeken].reverse().forEach(v => {
-    const isExtra = !v.wedstrijdVan || v.wedstrijdVan === 'null' || v.wedstrijdVan === '';
-    const van = isExtra ? null : getWedstrijd(v.wedstrijdVan);
+  let html = '';
+  [...verzoeken].reverse().forEach(v => {
+    const van = getWedstrijd(v.wedstrijdVan);
     const naar = getWedstrijd(v.wedstrijdNaar);
     const isAanvrager = v.aanvrager === currentUser;
     const isOntvanger = v.ontvanger === currentUser;
@@ -1088,87 +1054,42 @@ function renderVerzoeken() {
     html += `<div class="verzoek-card">
       <div class="verzoek-header">
         <div>
-          <div class="verzoek-id">${isExtra ? '➕ Extra dienst' : '🔄 Ruilen'} · ID: ${v.id}</div>
-          <span class="status status-open">open</span>
+          <div class="verzoek-id">ID: ${v.id}</div>
+          <span class="status status-${v.status}">${v.status}</span>
         </div>
         <div style="font-size:12px;color:var(--subtekst)">${v.timestamp ? new Date(v.timestamp).toLocaleDateString('nl-NL') : ''}</div>
       </div>
       <div class="verzoek-body">
         <div class="swap-side">
-          <div class="swap-label">${isExtra ? 'Aanbieder' : 'Van'}</div>
+          <div class="swap-label">Van</div>
           <div class="swap-name">${v.aanvrager}</div>
-          ${isExtra
-            ? `<div class="swap-match" style="color:var(--oranje-light)">Wil extra fluiten</div>`
-            : `<div class="swap-match">${van ? `${van.datum} ${van.tijd}` : '?'}</div>
-               <div class="swap-match">${van ? `${van.thuisteam.split(' - ')[1] || van.thuisteam} vs ${van.uitteam.split(' - ')[1] || van.uitteam}` : ''}</div>`
-          }
+          <div class="swap-match">${van ? `${van.datum} ${van.tijd}` : '?'}</div>
+          <div class="swap-match">${van ? `${van.thuisteam.split(' - ')[1] || van.thuisteam} vs ${van.uitteam.split(' - ')[1] || van.uitteam}` : ''}</div>
         </div>
-        <div class="swap-arrow">${isExtra ? '→' : '⇄'}</div>
+        <div class="swap-arrow">⇄</div>
         <div class="swap-side">
-          <div class="swap-label">${isExtra ? 'Over te nemen van' : 'Naar'}</div>
+          <div class="swap-label">Naar</div>
           <div class="swap-name">${v.ontvanger}</div>
           <div class="swap-match">${naar ? `${naar.datum} ${naar.tijd}` : '?'}</div>
           <div class="swap-match">${naar ? `${naar.thuisteam.split(' - ')[1] || naar.thuisteam} vs ${naar.uitteam.split(' - ')[1] || naar.uitteam}` : ''}</div>
         </div>
       </div>
-      <div class="verzoek-actions">
-        ${isOntvanger ? `<button class="btn-accept" onclick="accepteerVerzoek('${v.id}')">✓ Accepteren</button>
-                        <button class="btn-danger" onclick="weigerVerzoek('${v.id}')">✗ Weigeren</button>` : ''}
-        ${isAanvrager ? `<button class="btn-danger" onclick="annuleerVerzoek('${v.id}')">Annuleren</button>` : ''}
-      </div>
-    </div>`;
+      <div class="verzoek-actions">`;
+
+    if (v.status === 'open') {
+      if (isOntvanger) {
+        html += `<button class="btn-accept" onclick="accepteerVerzoek('${v.id}')">✓ Accepteren</button>
+                 <button class="btn-danger" onclick="weigerVerzoek('${v.id}')">✗ Weigeren</button>`;
+      }
+      if (isAanvrager) {
+        html += `<button class="btn-danger" onclick="annuleerVerzoek('${v.id}')">Annuleren</button>`;
+      }
+    }
+
+    html += `</div></div>`;
   });
 
-  document.getElementById('verzoekenContent').innerHTML = html;
-}
-
-function renderHistoriek() {
-  const { verzoeken, wedstrijden } = schedule;
-  const afgehandeld = verzoeken.filter(v => v.status !== 'open');
-
-  if (!afgehandeld.length) {
-    document.getElementById('historiekContent').innerHTML = '<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">Geen afgehandelde verzoeken</div></div>';
-    return;
-  }
-
-  const getWedstrijd = id => wedstrijden.find(w => w.id == id);
-  let html = '<div class="table-wrap"><table><thead><tr><th>Type</th><th>Van</th><th>Naar</th><th>Wedstrijd</th><th>Status</th><th>Datum</th><th></th></tr></thead><tbody>';
-
-  [...afgehandeld].reverse().forEach(v => {
-    const isExtra = !v.wedstrijdVan || v.wedstrijdVan === 'null' || v.wedstrijdVan === '';
-    const naar = getWedstrijd(v.wedstrijdNaar);
-    const datum = v.timestamp ? new Date(v.timestamp).toLocaleDateString('nl-NL') : '–';
-
-    html += `<tr>
-      <td>${isExtra ? '➕' : '🔄'}</td>
-      <td>${v.aanvrager}</td>
-      <td>${v.ontvanger}</td>
-      <td style="font-size:12px">${naar ? `${naar.datum} ${naar.tijd}` : '–'}</td>
-      <td><span class="status status-${v.status}">${v.status}</span></td>
-      <td style="font-size:12px;color:var(--subtekst)">${datum}</td>
-      <td><button class="btn-danger" style="padding:5px 10px;font-size:12px" onclick="verwijderVerzoek('${v.id}')">🗑</button></td>
-    </tr>`;
-  });
-
-  html += '</tbody></table></div>';
-  document.getElementById('historiekContent').innerHTML = html;
-}
-
-async function verwijderVerzoek(id) {
-  const result = await apiPost({ action: 'deleteVerzoek', id });
-  if (result.error) { showToast(result.error, true); return; }
-  showToast('Verwijderd ✓');
-  await loadData();
-  renderHistoriek();
-}
-
-async function verwijderAlles() {
-  if (!confirm('Weet je zeker dat je de hele historiek wil wissen?')) return;
-  const result = await apiPost({ action: 'deleteAllAfgehandeld' });
-  if (result.error) { showToast(result.error, true); return; }
-  showToast('Historiek gewist ✓');
-  await loadData();
-  renderHistoriek();
+  document.getElementById('verzoekenContent').innerHTML = html || '<div class="empty"><div class="empty-icon">🔄</div><div class="empty-text">Geen verzoeken</div></div>';
 }
 
 function renderMijn() {
@@ -1257,57 +1178,21 @@ function updateOpenCount() {
 // ===================================================
 // MODAL
 // ===================================================
-let modalType = 'ruil'; // 'ruil' of 'extra'
-
-function switchModalType(type) {
-  modalType = type;
-  document.getElementById('modalRuil').style.display = type === 'ruil' ? 'block' : 'none';
-  document.getElementById('modalExtra').style.display = type === 'extra' ? 'block' : 'none';
-  document.getElementById('typeRuil').classList.toggle('active', type === 'ruil');
-  document.getElementById('typeExtra').classList.toggle('active', type === 'extra');
-
-  if (type === 'extra') {
-    // Vul alle wedstrijden in behalve die van mijzelf
-    const andereWedstrijden = schedule.wedstrijden.filter(w => w.scheids !== currentUser);
-    const sel = document.getElementById('modalExtraWedstrijd');
-    sel.innerHTML = '<option value="">Selecteer wedstrijd...</option>' +
-      andereWedstrijden.map(w => `<option value="${w.id}">${w.datum} ${w.tijd} – ${w.thuisteam} vs ${w.uitteam} (${w.scheids})</option>`).join('');
-    document.getElementById('modalExtraOntvanger').textContent = '–';
-  }
-}
-
-function filterExtraOntvanger() {
-  const wedstrijdId = document.getElementById('modalExtraWedstrijd').value;
-  if (!wedstrijdId) { document.getElementById('modalExtraOntvanger').textContent = '–'; return; }
-  const w = schedule.wedstrijden.find(x => x.id == wedstrijdId);
-  document.getElementById('modalExtraOntvanger').textContent = w ? w.scheids : '–';
-}
-
 function openRuilModal(wedstrijdId) {
   if (!currentUser) { showToast('Log eerst in', true); return; }
   selectedVanWedstrijd = wedstrijdId;
-  modalType = 'ruil';
-
-  // Reset modal type
-  switchModalType('ruil');
 
   const w = schedule.wedstrijden.find(x => x.id == wedstrijdId);
   document.getElementById('modalMijnWedstrijd').textContent =
     `${w.datum} ${w.tijd} – ${w.thuisteam} vs ${w.uitteam}`;
 
+  // Vul ontvangers in (alle scheids behalve ikzelf)
   const ontvangers = [...new Set(schedule.wedstrijden.map(x => x.scheids))].filter(s => s !== currentUser);
   const sel = document.getElementById('modalOntvanger');
   sel.innerHTML = '<option value="">Selecteer scheidsrechter...</option>' +
     ontvangers.map(n => `<option>${n}</option>`).join('');
 
   document.getElementById('modalNaarWedstrijd').innerHTML = '<option value="">Selecteer eerst een scheidsrechter...</option>';
-  document.getElementById('ruilModal').classList.add('open');
-}
-
-function openExtraModal() {
-  if (!currentUser) { showToast('Log eerst in', true); return; }
-  selectedVanWedstrijd = null;
-  switchModalType('extra');
   document.getElementById('ruilModal').classList.add('open');
 }
 
@@ -1324,45 +1209,22 @@ function closeModal() {
 }
 
 async function verstuurVerzoek() {
-  if (modalType === 'ruil') {
-    const ontvanger = document.getElementById('modalOntvanger').value;
-    const naarWedstrijd = document.getElementById('modalNaarWedstrijd').value;
-    if (!ontvanger || !naarWedstrijd) { showToast('Selecteer een scheidsrechter en wedstrijd', true); return; }
+  const ontvanger = document.getElementById('modalOntvanger').value;
+  const naarWedstrijd = document.getElementById('modalNaarWedstrijd').value;
+  if (!ontvanger || !naarWedstrijd) { showToast('Selecteer een scheidsrechter en wedstrijd', true); return; }
 
-    const result = await apiPost({
-      action: 'requestSwap',
-      type: 'ruil',
-      aanvrager: currentUser,
-      wedstrijdVan: selectedVanWedstrijd,
-      ontvanger,
-      wedstrijdNaar: parseInt(naarWedstrijd)
-    });
+  const result = await apiPost({
+    action: 'requestSwap',
+    aanvrager: currentUser,
+    wedstrijdVan: selectedVanWedstrijd,
+    ontvanger,
+    wedstrijdNaar: parseInt(naarWedstrijd)
+  });
 
-    if (result.error) { showToast(result.error, true); return; }
-    closeModal();
-    showToast('Ruilverzoek verstuurd! 🔥');
+  if (result.error) { showToast(result.error, true); return; }
 
-  } else {
-    // Extra dienst
-    const wedstrijdId = document.getElementById('modalExtraWedstrijd').value;
-    if (!wedstrijdId) { showToast('Selecteer een wedstrijd', true); return; }
-    const w = schedule.wedstrijden.find(x => x.id == wedstrijdId);
-    if (!w) return;
-
-    const result = await apiPost({
-      action: 'requestSwap',
-      type: 'extra',
-      aanvrager: currentUser,
-      wedstrijdVan: null,
-      ontvanger: w.scheids,
-      wedstrijdNaar: parseInt(wedstrijdId)
-    });
-
-    if (result.error) { showToast(result.error, true); return; }
-    closeModal();
-    showToast('Extra dienst aangeboden! 🔥');
-  }
-
+  closeModal();
+  showToast('Ruilverzoek verstuurd! 🔥');
   await loadData();
 }
 
@@ -1520,14 +1382,13 @@ function checkAdminAutoRender() {
 // ===================================================
 function switchTab(name) {
   currentTab = name;
-  const tabs = ['rooster', 'verzoeken', 'mijn', 'historiek', 'admin'];
+  const tabs = ['rooster', 'verzoeken', 'mijn', 'admin'];
   document.querySelectorAll('.tab').forEach((t, i) => {
     t.classList.toggle('active', tabs[i] === name);
   });
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById(`panel-${name}`).classList.add('active');
   if (name === 'admin') checkAdminAutoRender();
-  if (name === 'historiek') renderHistoriek();
 }
 
 function showToast(msg, isError = false) {
